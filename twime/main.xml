@@ -1,0 +1,76 @@
+<!DOCTYPE schema [
+    <!ENTITY globals_file       SYSTEM "globals.xml">
+    <!ENTITY transactions_file  SYSTEM "twime.xml">
+    <!ENTITY fast_file          SYSTEM "fast.xml">
+    <!ENTITY adapters_file      SYSTEM "adapters.xml">
+]>
+
+
+<schema name="moex-twime-example">
+
+    <!-- Подставляем содержимое файлов средствами XML. -->
+    &adapters_file;
+    &globals_file;
+    &fast_file;
+    &transactions_file;
+
+    <!-- Таймер 200 миллисекунд. -->
+    <timer period="200millis" as="timer" >
+        <timestamp field="time" />
+    </timer>
+
+    <map stream="timer in" as="control out">
+        <field name="action" type="int64"/>
+        <field name="price"  type="money" />
+        <program><![CDATA[
+
+                if (not twime_connected) {
+                    skip;
+                }
+
+                // Считаем кол-во запусков. Каждый запуск 1 раз в 200 миллисекунд.
+                current_time = current_time + 1;
+
+                if (SIDE == 2) {  // Продажа
+                    out.price = ask_last_price + 1000;
+
+                    if (out.price == old_price) {
+                        out.price = out.price + money(1);
+                    }
+                } else if (SIDE == 1) {  // Покупка
+                    out.price = bid_last_price - 1000;
+
+                    if (out.price == old_price) {
+                        out.price = out.price - money(1);
+                    }
+                }
+
+                old_price = out.price;
+
+                out.action = NONE;
+
+                if (out.price > 0) {
+                    // Ждём INIT_TIME запусков, пока заполняется стакан.
+                    if (current_time == INIT_TIME) {
+                        out.action = START;
+
+                        int64 x = nanoTime();
+                        x = x/10000000;
+                        x = x & 0xfffffff;
+                        LastID = x;
+                        
+                        logInfo ('FirstId: ', LastID);
+                    } else if ((current_time > INIT_TIME) and (current_time <= (INIT_TIME + TEST_CNT))) {
+                        out.action = MOVE;
+                    } else if (current_time == (INIT_TIME + TEST_CNT + 1)) {
+                        out.action = DROP;
+                    } else {
+                        skip;
+                    }
+
+                    logInfo ('Best bid: ', bid_last_price, ' Best ask: ', ask_last_price);
+                }
+
+        ]]></program>
+    </map>
+</schema>

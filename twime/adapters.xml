@@ -1,0 +1,40 @@
+<adapters>
+    <!-- ФОРТС, Full Orders Log основной, резервный, A и B -->
+    <fast name="md_forts_fol" templates="forts_27_02.2017.xml">
+        <accept over="udp">
+            <on port="46040" vlan="234">
+                <multicast group="239.195.11.40">
+                    <source ip="91.203.253.234" />
+                </multicast>
+            </on>
+            <on port="47040" vlan="244">
+                <multicast group="239.195.139.40">
+                    <source ip="91.203.255.234" />
+                </multicast>
+            </on>
+        </accept>
+        <accept over="udp">
+            <on port="44040" vlan="234">
+                <multicast group="239.195.10.40">
+                    <source ip="91.203.253.233" />
+                </multicast>
+            </on>
+            <on port="45040" vlan="244">
+                <multicast group="239.195.138.40">
+                    <source ip="91.203.255.233" />
+                </multicast>
+            </on>
+        </accept>
+        <trading venue="moex" market="derivatives" />
+    </fast>
+
+    <twime name="twime_tcp" messageschema="twime_message_schema_2.1.xml">
+        <initiate>
+            <to host="91.203.252.32" port="9000" gateway="10.224.72.1" vlan="224" />
+        </initiate>
+        <callbacks connect="on_twime_tcp_connected" disconnect="on_twime_tcp_disconnected"/>
+        <client id="" />  <!-- Credentials, идентификатор клиента (логин). -->
+        <keepalive interval="30sec" />
+        <check seqno="off" />
+    </twime>
+</adapters>

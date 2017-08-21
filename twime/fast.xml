@@ -1,0 +1,43 @@
+
+<!-- Разбор FAST потока. -->
+<input from="md_forts_fol" as="md_forts_fol_fast">
+    <accept message="OrdersLog" />
+    <field name="MsgSeqNum" type="uint64" />
+    <field name="LastFragment" type="uint"/>
+    <sequence name="MDEntries">
+        <field name="MDUpdateAction" type="uint" />
+        <field name="MDEntryType" type="uint" />
+        <field name="MDEntryID" type="uint" />
+        <field name="SecurityID" type="uint64" />
+        <field name="MDEntryPx" type="money" />
+        <field name="MDEntrySize" type="uint" />
+        <!-- Чтобы заработала фильтрация внесистемных заявок, нужно указать это поле. -->
+        <field name="MDFlags" type="uint" />
+    </sequence>
+</input>
+
+<!-- Построение стакана. -->
+<book orders="md_forts_fol_fast" as="md_book out">
+    <accept instruments="instr" />
+    <field name="LastFragment" type="uint" />
+    <field name="MsgSeqNum" type="uint64" />
+    <field name="instrument" type="uint64" />
+    <field name="time" type="uint64" />
+    <field name="book" type="Book" />
+</book>
+
+<!-- Поиск лучших цен в стакане. -->
+<map stream="md_book in" as="md_book_algo out">
+    <field name="MsgSeqNum" type="uint64" expression="in.MsgSeqNum" />
+    <program><![CDATA[
+
+         if (in.book[0].ask.price > 0) {
+             ask_last_price = in.book[0].ask.price;
+         }
+
+         if (in.book[0].bid.price > 0) {
+             bid_last_price = in.book[0].bid.price;
+         }
+         
+    ]]></program>
+</map>

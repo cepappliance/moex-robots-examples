@@ -1,0 +1,33 @@
+<global>
+    <instruments>
+        <instrument name="instr" id="880553" maxpricelevels="1000" />
+    </instruments>
+
+    <constant name="TWIME_ACCOUNT"      type="string(8)"    value="''" />  <!-- TWIME код клиента. -->
+    <constant name="SECURITY_ID"        type="uint64"       value="880553" />  <!-- ID инструмента на ФОРТС. -->
+
+    <variable name="twime_connected"    type="boolean"     value="false" />
+
+    <type name="PriceLevel" def="tuple &lt; money price, uint64 size &gt;" />
+    <type name="Book" def="tuple &lt; PriceLevel bid, PriceLevel ask &gt;[ 16 ]" />
+
+    <constant name="NONE"                type="uint64"     value="0" />
+    <constant name="START"               type="uint64"     value="1" />
+    <constant name="MOVE"                type="uint64"     value="2" />
+    <constant name="DROP"                type="uint64"     value="3" />
+
+    <constant name="INIT_TIME"           type="uint64"     value="50" />
+    <constant name="TEST_CNT"            type="uint64"     value="5" />
+
+    <constant name="ORDER_QTY"          type="uint64"      value="1" />
+    <constant name="SIDE"               type="uint64"      value="2" />
+
+    <variable name="delay_counter"      type="uint64"     value="0" />
+    <variable name="current_time"       type="int64"      value="0" />
+    <variable name="ask_last_price"     type="money"      value="100" />
+    <variable name="bid_last_price"     type="money"      value="10" />
+    <variable name="old_price"          type="money"      value="0" />
+
+    <variable name="LastID"             type="int64" value="10" />
+    <variable name="exchange_order_id"  type="int" value="0" />
+</global>
