@@ -9,7 +9,7 @@ import com.cepappliance.config.fpga.log.*;
  * Adds time difference between two consecuent log messages to the timestamp header of each log message printed to STDOUT.<br>
  * The time diference is formated as [seconds.nonoseconds]. 
  */
-public class CustomHandlerSTDOUT extends FPGALogHandlerSTDOUT {
+public class CustomLogHandlerSTDOUT extends FPGALogHandlerSTDOUT {
     private long lastTimestamp;
 
     protected void printTimestamp(PrintStream printStream, long timestamp) {

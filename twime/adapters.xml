@@ -5,7 +5,7 @@
 <adapters>
     <!-- MOEX Derivatives Market/SPECTRA. FAST Full Orders Log adapter. -->
     <!-- Primary and secondary (reserve) streams, feeds A and B for each of the streams. -->
-    <fast name="md_forts_fol" templates="forts_27_02.2017.xml">
+    <fast name="md_forts_fol" templates="specs/forts_27_02.2017.xml">
         <accept over="udp"> <!-- Primeary stream -->
             <on port="44040" vlan="234"><!-- Feed A -->
                 <multicast group="239.195.10.40">
@@ -33,7 +33,7 @@
         <trading venue="moex" market="derivatives" />
     </fast>
     <!-- MOEX Derivatives Market/SPECTRA. TWIME adapter. -->
-    <twime name="twime_tcp" messageschema="twime_message_schema_2.1.xml">
+    <twime name="twime_tcp" messageschema="specs/twime_message_schema_2.1.xml">
         <initiate>
             <to host="91.203.252.32" port="9000" gateway="10.224.72.1" vlan="224" />
         </initiate>
