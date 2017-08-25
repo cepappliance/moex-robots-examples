@@ -1,10 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Copyright 2017 CEPappliance, Inc.
+-->
 <global>
     <instruments>
         <instrument name="instr" id="880553" maxpricelevels="1000" />
     </instruments>
 
-    <constant name="TWIME_ACCOUNT"      type="string(8)"    value="''" />  <!-- TWIME код клиента. -->
-    <constant name="SECURITY_ID"        type="uint64"       value="880553" />  <!-- ID инструмента на ФОРТС. -->
+    <constant name="TWIME_ACCOUNT"      type="string(8)"    value="''" />  <!-- TWIME Account / Client ID. Used in outgoing messages -->
+    <constant name="SECURITY_ID"        type="uint64"       value="880553" />  <!-- Security ID for Derivatives market -->
 
     <variable name="twime_connected"    type="boolean"     value="false" />
 

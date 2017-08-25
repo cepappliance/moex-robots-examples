@@ -1,5 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Copyright 2017 CEPappliance, Inc.
+-->
 
-<!-- Разбор FAST потока. -->
+<!-- FAST input for Full Orders Log (FOL) messages -->
 <input from="md_forts_fol" as="md_forts_fol_fast">
     <accept message="OrdersLog" />
     <field name="MsgSeqNum" type="uint64" />
@@ -11,12 +15,12 @@
         <field name="SecurityID" type="uint64" />
         <field name="MDEntryPx" type="money" />
         <field name="MDEntrySize" type="uint" />
-        <!-- Чтобы заработала фильтрация внесистемных заявок, нужно указать это поле. -->
+        <!-- MDFlags is required to filter out (ignore) OTC orders -->
         <field name="MDFlags" type="uint" />
     </sequence>
 </input>
 
-<!-- Построение стакана. -->
+<!-- Order Book (OB) -->
 <book orders="md_forts_fol_fast" as="md_book out">
     <accept instruments="instr" />
     <field name="LastFragment" type="uint" />
@@ -26,7 +30,7 @@
     <field name="book" type="Book" />
 </book>
 
-<!-- Поиск лучших цен в стакане. -->
+<!-- Calculate bid and ask prices -->
 <map stream="md_book in" as="md_book_algo out">
     <field name="MsgSeqNum" type="uint64" expression="in.MsgSeqNum" />
     <program><![CDATA[

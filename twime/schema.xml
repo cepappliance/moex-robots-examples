@@ -1,3 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Copyright 2017 CEPappliance, Inc.
+-->
+
 <!DOCTYPE schema [
     <!ENTITY globals_file       SYSTEM "globals.xml">
     <!ENTITY transactions_file  SYSTEM "twime.xml">
@@ -8,17 +13,18 @@
 
 <schema name="moex-twime-example">
 
-    <!-- Подставляем содержимое файлов средствами XML. -->
+    <!-- Include other parts. -->
     &adapters_file;
     &globals_file;
     &fast_file;
     &transactions_file;
 
-    <!-- Таймер 200 миллисекунд. -->
+    <!-- Timer with 200 millisecond period -->
     <timer period="200millis" as="timer" >
         <timestamp field="time" />
     </timer>
 
+    <!-- This stream is triggered by the timer stream -->
     <map stream="timer in" as="control out">
         <field name="action" type="int64"/>
         <field name="price"  type="money" />
@@ -28,16 +34,16 @@
                     skip;
                 }
 
-                // Считаем кол-во запусков. Каждый запуск 1 раз в 200 миллисекунд.
+                // Count invocations (one invocation in 200 millisecond interval)
                 current_time = current_time + 1;
 
-                if (SIDE == 2) {  // Продажа
+                if (SIDE == 2) {  /* ASK (sell) side */
                     out.price = ask_last_price + 1000;
 
                     if (out.price == old_price) {
                         out.price = out.price + money(1);
                     }
-                } else if (SIDE == 1) {  // Покупка
+                } else if (SIDE == 1) {  /* BID (buy) side */
                     out.price = bid_last_price - 1000;
 
                     if (out.price == old_price) {
@@ -50,7 +56,7 @@
                 out.action = NONE;
 
                 if (out.price > 0) {
-                    // Ждём INIT_TIME запусков, пока заполняется стакан.
+                    // Wait for INIT_TIME invocations until the Order Book is complete.
                     if (current_time == INIT_TIME) {
                         out.action = START;
 

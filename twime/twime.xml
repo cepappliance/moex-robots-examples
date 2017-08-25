@@ -1,37 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-
-    Обратки адаптеров.
-
+    Copyright 2017 CEPappliance, Inc.
 -->
-
+<!-- 
+    Adapters' callbacks.
+-->
 <map stream="on_twime_tcp_connected" as="on_twime_tcp_connected_out">
     <program><![CDATA[
-
         twime_connected = true;
         logInfo('/TWIME/ connected');
-
     ]]></program>
 </map>
 
 
 <map stream="on_twime_tcp_disconnected" as="on_twime_tcp_disconnected_out">
     <program><![CDATA[
-
         twime_connected = false;
         logInfo('/TWIME/ disconnected');
-        
     ]]></program>
 </map>
 
 
 <!-- 
-
-    Ответы по транзакциям.
-
+    Trading venue response handlers
 -->
 
-
-<!-- Подтверждение выставления заявки. -->
+<!-- New order has been accepted by the venue -->
 <input from="twime_tcp" as="new_order_response">
     <accept message="NewOrderSingleResponse" />
     <field name="ClOrdID"   type="uint" />
@@ -42,15 +36,13 @@
 
 <map stream="new_order_response in" as="new_order_confirm out">
     <program><![CDATA[
-
         exchange_order_id = in.OrderID;
         logInfo ('Added, new id ', exchange_order_id);
-
     ]]></program>
 </map>
 
 
-<!-- Подтверждение перестановки заявки. -->
+<!-- The order has been replaced -->
 <input from="twime_tcp" as="replace_response">
     <accept message="OrderReplaceResponse" />
     <field name="ClOrdID"   type="uint" />
@@ -60,15 +52,13 @@
 
 <map stream="replace_response in" as="replace_confirm">
     <program><![CDATA[
-
-            exchange_order_id = in.OrderID;
-            logInfo ('Replaced, new id ', exchange_order_id);
-
+        exchange_order_id = in.OrderID;
+        logInfo ('Replaced, new id ', exchange_order_id);
     ]]></program>
 </map>
 
 
-<!-- Подтверждение снятия заявки. -->
+<!-- The order has been cancelled -->
 <input from="twime_tcp" as="cancel_response">
     <accept message="OrderCancelResponse" />
     <field name="ClOrdID"   type="uint" />
@@ -78,21 +68,17 @@
 
 <map stream="cancel_response in" as="cancel_confirm">
     <program><![CDATA[
-
-            logInfo ('Canceled, id ', in.OrderID);
-
+        logInfo ('Canceled, id ', in.OrderID);
     ]]></program>
 </map>
 
 
 <!-- 
-
-    Отклонённые запросы.
-
+    TWIME reject handlers
 -->
 
 
-<!-- Отклонение постановки заявки. -->
+<!-- New order request has been rejected -->
 <input from="twime_tcp" as="new_order_reject">
     <accept message="NewOrderReject" />
     <field name="ClOrdID"           type="uint" />
@@ -102,31 +88,26 @@
 
 <map stream="new_order_reject in" as="new_order_reject_algo">
     <program><![CDATA[
-
-            logInfo ('NewOrderReject, ', in.OrdRejReason);
-
+        logInfo ('New rejected, ', in.OrdRejReason);
     ]]></program>
 </map>
 
 
-<!-- Отклонение перестановки заявки. -->
+<!-- Replacement request has been rejected -->
 <input from="twime_tcp" as="replace_reject">
     <accept message="OrderReplaceReject" />
     <field name="ClOrdID"           type="uint" />
     <field name="OrdRejReason"      type="int" />
 </input>
 
-
 <map stream="replace_reject in" as="replace_reject_algo">
     <program><![CDATA[
-
-            logInfo ('OrderReplaceReject, ', in.OrdRejReason);
-
+        logInfo ('Replacement rejected, ', in.OrdRejReason);
     ]]></program>
 </map>
 
 
-<!-- Отклонение снятия заявки. -->
+<!-- Cancellation request has been rejected -->
 <input from="twime_tcp" as="cancel_reject">
     <accept message="OrderCancelReject" />
     <field name="ClOrdID"           type="uint" />
@@ -136,22 +117,16 @@
 
 <map stream="cancel_reject in" as="cancel_reject_algo">
     <program><![CDATA[
-
-            logInfo ('OrderCancelReject, ', in.OrdRejReason);
-
+        logInfo ('Cancellation rejected, ', in.OrdRejReason);
     ]]></program>
 </map>
 
-
 <!-- 
-
-    Запросы по транзакциям.
-
+    Prepare the requests (orders)
 -->
-
-
 <case stream="control in">
     <selector expression="in.action"/>
+    <!-- New order request -->
     <when equals="START" as="twime_new out" >
         <field name="ClOrdID"       type="uint" />
         <field name="ClOrdLinkID"   type="uint"         expression="1" />
@@ -172,6 +147,7 @@
 
         ]]></program>
     </when>
+    <!-- Replacement/move request -->
     <when equals="MOVE" as="twime_move out" >
         <field name="ClOrdID"       type="uint" />
         <field name="ClOrdLinkID"   type="uint"         expression="1" />
@@ -190,6 +166,7 @@
 
         ]]></program>
     </when>
+    <!-- Cancellation request -->
     <when equals="DROP" as="twime_cancel out" >
         <field name="ClOrdID"       type="uint" />
         <field name="OrderID"       type="uint"         expression="exchange_order_id" />
@@ -205,7 +182,7 @@
     </when>
 </case>
 
-
+<!-- Send the requests out to the trading venue -->
 <output stream="twime_new" to="twime_tcp">
     <as message="NewOrderSingle" />
 </output>
