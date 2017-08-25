@@ -1,0 +1,90 @@
+<schema name="pcie-test">
+    <adapters>
+        <pcie name="PCI" />
+    </adapters>
+    <input from="PCI" as="order" >
+        <field name="side" type="string(1)" />
+        <field name="price" type="double" />
+        <field name="size" type="uint" />
+    </input>
+    <map stream="order" as="mktdata">
+        <field name="orderbook" type="tuple&lt;tuple&lt;double price, uint size&gt; buy, tuple&lt;double price, uint size&gt; sell&gt;[15]" />
+        <program>
+            orderbook[0].buy.price = order.price;
+            orderbook[0].buy.size = order.size;
+            orderbook[0].sell.price = order.price;
+            orderbook[0].sell.size = order.size;
+
+            orderbook[1].buy.price = order.price;
+            orderbook[1].buy.size = order.size;
+            orderbook[1].sell.price = order.price;
+            orderbook[1].sell.size = order.size;
+
+            orderbook[2].buy.price = order.price;
+            orderbook[2].buy.size = order.size;
+            orderbook[2].sell.price = order.price;
+            orderbook[2].sell.size = order.size;
+
+            orderbook[3].buy.price = order.price;
+            orderbook[3].buy.size = order.size;
+            orderbook[3].sell.price = order.price;
+            orderbook[3].sell.size = order.size;
+
+            orderbook[4].buy.price = order.price;
+            orderbook[4].buy.size = order.size;
+            orderbook[4].sell.price = order.price;
+            orderbook[4].sell.size = order.size;
+
+            orderbook[5].buy.price = order.price;
+            orderbook[5].buy.size = order.size;
+            orderbook[5].sell.price = order.price;
+            orderbook[5].sell.size = order.size;
+
+            orderbook[6].buy.price = order.price;
+            orderbook[6].buy.size = order.size;
+            orderbook[6].sell.price = order.price;
+            orderbook[6].sell.size = order.size;
+
+            orderbook[7].buy.price = order.price;
+            orderbook[7].buy.size = order.size;
+            orderbook[7].sell.price = order.price;
+            orderbook[7].sell.size = order.size;
+
+            orderbook[8].buy.price = order.price;
+            orderbook[8].buy.size = order.size;
+            orderbook[8].sell.price = order.price;
+            orderbook[8].sell.size = order.size;
+
+            orderbook[9].buy.price = order.price;
+            orderbook[9].buy.size = order.size;
+            orderbook[9].sell.price = order.price;
+            orderbook[9].sell.size = order.size;
+
+            orderbook[10].buy.price = order.price;
+            orderbook[10].buy.size = order.size;
+            orderbook[10].sell.price = order.price;
+            orderbook[10].sell.size = order.size;
+
+            orderbook[11].buy.price = order.price;
+            orderbook[11].buy.size = order.size;
+            orderbook[11].sell.price = order.price;
+            orderbook[11].sell.size = order.size;
+
+            orderbook[12].buy.price = order.price;
+            orderbook[12].buy.size = order.size;
+            orderbook[12].sell.price = order.price;
+            orderbook[12].sell.size = order.size;
+
+            orderbook[13].buy.price = order.price;
+            orderbook[13].buy.size = order.size;
+            orderbook[13].sell.price = order.price;
+            orderbook[13].sell.size = order.size;
+
+            orderbook[14].buy.price = order.price;
+            orderbook[14].buy.size = order.size;
+            orderbook[14].sell.price = order.price;
+            orderbook[14].sell.size = order.size;
+        </program>
+    </map>
+    <output stream="mktdata" to="PCI"/> 
+</schema>

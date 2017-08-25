@@ -3,7 +3,7 @@
 # Starts and configures CEPappliance Emulator.
 # Gracefully terminates on Ctrl+C.
 
-CEPAPPLIANCE_LICENSE_PATH=../valid.license
+CEPAPPLIANCE_LICENSE_PATH=../test.license
 
 java -Xmx1G -Xms1G -ea -Dcom.cepappliance.log.level=*:DBG -Djava.net.preferIPv4Stack=true \
     -jar ../bin/cepappliance-emul.jar \
@@ -20,9 +20,9 @@ sleep 1
 
 java -Xmx1G -Xms1G -ea -Dcom.cepappliance.fpga.log.handler=CustomLogHandlerSTDOUT \
     -jar ../bin/cepappliance-config.jar \
-    -appliance localhost:21761 \
     -license $CEPAPPLIANCE_LICENSE_PATH \
-    ./schema.xml \
+    -appliance localhost:21761 \
+    schema.xml \
     2>&1 | tee -i ./schema.log
 
 

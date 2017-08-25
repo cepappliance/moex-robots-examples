@@ -3,12 +3,12 @@
 # Configure CEPappliance
 
 
-CEPAPPLIANCE_IP_ADDR=""
-CEPAPPLIANCE_LICENSE_PATH=../valid.license
+CEPAPPLIANCE_IP_ADDR="<please-specify-host-address>"
+CEPAPPLIANCE_LICENSE_PATH=../test.license
 
 
-java -jar -Xmx1G -Xms1G \
-	-ea /home/trade/bin/cepappliance-config.jar \
-	-appliance $CEPAPPLIANCE_IP_ADDR \
+java -Xmx1G -Xms1G -ea \
+	-jar ../bin/cepappliance-config.jar \
 	-license $CEPAPPLIANCE_LICENSE_PATH \
-	./schema.xml
+	-appliance $CEPAPPLIANCE_IP_ADDR \
+	schema.xml

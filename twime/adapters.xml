@@ -38,7 +38,7 @@
             <to host="91.203.252.32" port="9000" gateway="10.224.72.1" vlan="224" />
         </initiate>
         <callbacks connect="on_twime_tcp_connected" disconnect="on_twime_tcp_disconnected"/>
-        <client id="" />  <!-- TWIME Account/Client ID. -->
+        <client id="empty" />  <!-- TWIME Account/Client ID. -->
         <keepalive interval="30sec" />
         <check seqno="off" />
     </twime>

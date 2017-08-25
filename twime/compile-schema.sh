@@ -4,11 +4,11 @@
 # Used to make sure the given schema (schema.xml) is compilable
 
 
-CEPAPPLIANCE_LICENSE_PATH=../valid.license
+CEPAPPLIANCE_LICENSE_PATH=../test.license
 
 java -Xmx2048m -ea -Dcom.cepappliance.fpga.log.handler=CustomLogHandlerSTDOUT \
     -jar ../bin/cepappliance-config.jar \
-    -appliance localhost:12345 \
     -license $CEPAPPLIANCE_LICENSE_PATH \
-    ./schema.xml
+    -appliance localhost:12345 \
+    schema.xml
 
