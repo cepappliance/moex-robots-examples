@@ -14,7 +14,6 @@
 <schema name="moex-twime-example">
 
     <!-- Include other parts. -->
-    &adapters_file;
     &globals_file;
     &fast_file;
     &transactions_file;

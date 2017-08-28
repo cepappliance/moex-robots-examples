@@ -22,6 +22,7 @@ java -Xmx1G -Xms1G -ea -Dcom.cepappliance.fpga.log.handler=CustomLogHandlerSTDOU
     -jar ../bin/cepappliance-config.jar \
     -license $CEPAPPLIANCE_LICENSE_PATH \
     -appliance localhost:21761 \
+    -adapters adapters.xml \
     schema.xml \
     2>&1 | tee -i ./schema.log
 

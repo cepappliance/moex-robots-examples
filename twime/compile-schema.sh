@@ -10,5 +10,6 @@ java -Xmx2048m -ea -Dcom.cepappliance.fpga.log.handler=CustomLogHandlerSTDOUT \
     -jar ../bin/cepappliance-config.jar \
     -license $CEPAPPLIANCE_LICENSE_PATH \
     -appliance localhost:12345 \
+    -adapters adapters.xml \
     schema.xml
 
